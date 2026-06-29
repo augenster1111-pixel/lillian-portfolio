@@ -1,0 +1,86 @@
+:root {
+  --bend-x: 50%;
+  --bend-y: 50%;
+  --bend-shift-x: 0px;
+  --bend-shift-y: 0px;
+  --bend-opacity: 0.2;
+  --bend-noise-opacity: 0.16;
+}
+
+.global-color-bends {
+  position: fixed;
+  inset: -10vh -10vw;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: var(--bend-opacity);
+  mix-blend-mode: screen;
+  contain: layout paint style;
+}
+
+.global-color-bends::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 4%, rgba(255, 255, 255, 0.04) 22%, rgba(255, 255, 255, 0.34) 31%, rgba(255, 255, 255, 0.08) 39%, transparent 54%),
+    linear-gradient(105deg, transparent 46%, rgba(255, 255, 255, 0.22) 59%, rgba(255, 255, 255, 0.06) 67%, transparent 82%),
+    radial-gradient(ellipse at var(--bend-x) var(--bend-y), rgba(255, 86, 58, 0.18), transparent 34%);
+  background-size: 160% 160%, 150% 150%, 100% 100%;
+  background-position: 48% 52%, 52% 48%, center;
+  filter: blur(34px) saturate(0.85);
+  transform: translate3d(var(--bend-shift-x), var(--bend-shift-y), 0) scale(1.02);
+  animation: colorBendsBreath 18s cubic-bezier(0.22, 1, 0.36, 1) infinite alternate;
+  will-change: transform, background-position, opacity;
+}
+
+.global-color-bends::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: var(--bend-noise-opacity);
+  background-image:
+    radial-gradient(circle at 18% 24%, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 72% 66%, rgba(255, 255, 255, 0.12) 0 1px, transparent 1.5px),
+    repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 7px);
+  background-size: 88px 88px, 124px 124px, 16px 16px;
+  filter: contrast(1.4);
+}
+
+body.theme-light {
+  --bend-opacity: 0.16;
+  --bend-noise-opacity: 0.08;
+}
+
+body.theme-light .global-color-bends {
+  mix-blend-mode: soft-light;
+}
+
+body.theme-light .global-color-bends::before {
+  background:
+    linear-gradient(115deg, transparent 5%, rgba(255, 255, 255, 0.08) 23%, rgba(116, 124, 130, 0.34) 32%, rgba(255, 255, 255, 0.1) 42%, transparent 58%),
+    linear-gradient(105deg, transparent 48%, rgba(176, 166, 148, 0.3) 61%, rgba(255, 255, 255, 0.08) 70%, transparent 84%),
+    radial-gradient(ellipse at var(--bend-x) var(--bend-y), rgba(156, 136, 106, 0.2), transparent 38%);
+  filter: blur(36px) saturate(0.65);
+}
+
+@keyframes colorBendsBreath {
+  0% {
+    opacity: 0.76;
+    background-position: 46% 52%, 53% 48%, center;
+    transform: translate3d(calc(var(--bend-shift-x) - 2px), calc(var(--bend-shift-y) + 1px), 0) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    background-position: 52% 48%, 48% 52%, center;
+    transform: translate3d(calc(var(--bend-shift-x) + 2px), calc(var(--bend-shift-y) - 1px), 0) scale(1.025);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .global-color-bends::before {
+    animation: none;
+    transform: none;
+  }
+}

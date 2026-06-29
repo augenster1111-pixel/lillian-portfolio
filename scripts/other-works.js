@@ -1,0 +1,196 @@
+function escapeHtml(value = '') {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[char]));
+}
+
+try {
+  document.body.classList.toggle('theme-light', localStorage.getItem('lillian-portfolio-theme') === 'light');
+} catch (error) {
+  document.body.classList.remove('theme-light');
+}
+
+function shuffleItems(items) {
+  const cloned = [...items];
+  for (let index = cloned.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [cloned[index], cloned[swapIndex]] = [cloned[swapIndex], cloned[index]];
+  }
+  return cloned;
+}
+
+function buildCard(item, mediaBase) {
+  const type = item.type === 'video' ? 'video' : 'image';
+  const sizeClass = item.size ? ` masonry-${item.size}` : '';
+  const videoClass = type === 'video' ? ' masonry-video' : '';
+  const src = `${mediaBase}${item.src}`;
+  const title = escapeHtml(item.title || item.label || 'Other Work');
+  const caption = escapeHtml(item.label || title);
+  const badge = item.badge ? `<span class="video-badge">${escapeHtml(item.badge)}</span>` : '';
+  const media = type === 'video'
+    ? `<video src="${escapeHtml(src)}" muted loop playsinline preload="metadata"></video>${badge}`
+    : `<img src="${escapeHtml(src)}" alt="${title}" loading="lazy">`;
+
+  return `<figure class="masonry-item${sizeClass}${videoClass}" data-preview-type="${type}" data-preview-src="${escapeHtml(src)}" data-preview-title="${title}" tabindex="0">${media}<figcaption>${caption}</figcaption></figure>`;
+}
+
+function renderArchiveCopy() {
+  const archive = window.OTHER_WORKS_DATA?.archive;
+  if (!archive) return;
+
+  const pairs = [
+    ['[data-archive-nav-title]', archive.navTitle],
+    ['[data-archive-nav-subtitle]', archive.navSubtitle],
+    ['[data-archive-eyebrow]', archive.eyebrow],
+    ['[data-archive-description]', archive.description],
+    ['[data-archive-footer]', archive.footer]
+  ];
+
+  pairs.forEach(([selector, value]) => {
+    const node = document.querySelector(selector);
+    if (node) node.textContent = value || '';
+  });
+
+  const title = document.querySelector('[data-archive-title]');
+  if (title) title.innerHTML = archive.titleHtml || '';
+  document.title = `${archive.navTitle || 'Other Works'} – Lillian`;
+}
+
+function initVariableProximity(root = document) {
+  const targets = [...root.querySelectorAll('[data-variable-proximity]')].filter((target) => !target.dataset.vpReady);
+  if (!targets.length) return;
+
+  const escapeChar = (value) => value === ' ' ? '&nbsp;' : escapeHtml(value);
+  const buildLine = (line) => line
+    .split(/(\s+)/)
+    .map((word) => {
+      if (!word.trim()) return `<span class="vp-word">${word.split('').map(escapeChar).join('')}</span>`;
+      return `<span class="vp-word">${[...word].map((char) => `<span class="vp-letter">${escapeChar(char)}</span>`).join('')}</span>`;
+    })
+    .join('');
+
+  targets.forEach((target) => {
+    const label = (target.innerText || target.textContent || '').replace(/\u00a0/g, ' ').trim();
+    if (!label) return;
+    const lines = label.split(/\n+/).map((line) => line.trim()).filter(Boolean);
+    target.dataset.vpReady = 'true';
+    target.setAttribute('aria-label', label.replace(/\s+/g, ' '));
+    target.classList.add('variable-proximity-ready');
+    target.innerHTML = lines.map((line) => `<span class="vp-line">${buildLine(line)}</span>`).join('');
+  });
+
+  const letters = [...document.querySelectorAll('.variable-proximity-ready .vp-letter')];
+  const radius = 170;
+  let pointer = { x: -9999, y: -9999 };
+  let raf = 0;
+
+  const update = () => {
+    raf = 0;
+    letters.forEach((letter) => {
+      const rect = letter.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const distance = Math.hypot(pointer.x - cx, pointer.y - cy);
+      const strength = Math.max(0, 1 - distance / radius);
+      const eased = strength * strength * (3 - 2 * strength);
+      const direction = pointer.x <= cx ? 1 : -1;
+      const weight = Math.round(820 + 110 * eased);
+      letter.style.fontVariationSettings = `'wght' ${weight}`;
+      letter.style.fontWeight = weight;
+      letter.style.transform = `translateX(${direction * 4 * eased}px)`;
+      letter.style.filter = eased ? `brightness(${1 + .12 * eased})` : '';
+    });
+  };
+
+  const requestUpdate = () => {
+    if (!raf) raf = requestAnimationFrame(update);
+  };
+
+  window.addEventListener('pointermove', (event) => {
+    pointer = { x: event.clientX, y: event.clientY };
+    requestUpdate();
+  }, { passive: true });
+
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+}
+
+const grid = document.querySelector('[data-other-all]');
+const mediaBase = grid?.dataset.mediaBase || '../media/other/';
+const source = window.OTHER_WORKS_DATA?.items || [];
+const items = shuffleItems(source.filter((item) => item.enabled !== false));
+
+renderArchiveCopy();
+initVariableProximity();
+
+if (grid) {
+  grid.innerHTML = items.map((item) => buildCard(item, mediaBase)).join('');
+}
+
+function createPreviewModal() {
+  const modal = document.createElement('div');
+  modal.className = 'media-preview-modal';
+  modal.setAttribute('aria-hidden', 'true');
+  modal.innerHTML = `
+    <button class="media-preview-close" type="button" aria-label="关闭预览">×</button>
+    <div class="media-preview-stage" role="dialog" aria-modal="true" aria-label="素材预览"></div>
+  `;
+  document.body.appendChild(modal);
+  return modal;
+}
+
+const previewModal = createPreviewModal();
+const previewStage = previewModal.querySelector('.media-preview-stage');
+const previewClose = previewModal.querySelector('.media-preview-close');
+
+function closePreview() {
+  previewModal.classList.remove('is-open');
+  previewModal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('is-preview-open');
+  previewStage.innerHTML = '';
+}
+
+function openPreview(card) {
+  const type = card.dataset.previewType;
+  const src = card.dataset.previewSrc;
+  const title = card.dataset.previewTitle || 'Other Work';
+  if (!src) return;
+
+  document.querySelectorAll('.masonry-video video').forEach((video) => video.pause());
+  previewStage.innerHTML = type === 'video'
+    ? `<video class="media-preview-content" src="${escapeHtml(src)}" controls autoplay playsinline></video>`
+    : `<img class="media-preview-content" src="${escapeHtml(src)}" alt="${escapeHtml(title)}">`;
+  previewModal.classList.add('is-open');
+  previewModal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('is-preview-open');
+
+  const previewVideo = previewStage.querySelector('video');
+  previewVideo?.play().catch(() => {});
+}
+
+document.querySelectorAll('.masonry-video video').forEach((video) => {
+  const card = video.closest('.masonry-video');
+  card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+  card.addEventListener('mouseleave', () => video.pause());
+});
+
+document.querySelectorAll('.other-works-grid .masonry-item').forEach((card) => {
+  card.addEventListener('click', () => openPreview(card));
+  card.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openPreview(card);
+    }
+  });
+});
+
+previewClose.addEventListener('click', closePreview);
+previewModal.addEventListener('click', (event) => {
+  if (event.target === previewModal) closePreview();
+});
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && previewModal.classList.contains('is-open')) closePreview();
+});
