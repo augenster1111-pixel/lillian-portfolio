@@ -159,7 +159,8 @@ body[data-project-id="04"] .work-copy p {
   gap: 34px !important;
 }
 .work04-case-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   padding: 10px 10px 22px;
   border: 1px solid rgba(255,255,255,.1);
@@ -218,11 +219,19 @@ body[data-project-id="04"] .work-copy p {
   letter-spacing: -.08em;
 }
 .work04-case-meta {
+  flex: 1 1 auto;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
   padding: 22px 8px 0;
+}
+.work04-case-meta > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-self: stretch;
 }
 .work04-case-meta span {
   display: block;
@@ -234,6 +243,9 @@ body[data-project-id="04"] .work-copy p {
   letter-spacing: .24em;
 }
 .work04-case-meta h3 {
+  min-height: 52px;
+  display: flex;
+  align-items: flex-end;
   margin: 0 0 8px;
   color: #f4f4f1;
   font-size: 22px;
@@ -248,7 +260,9 @@ body[data-project-id="04"] .work-copy p {
   font-weight: 700;
 }
 .work04-case-meta strong {
+  align-self: flex-end;
   flex: 0 0 auto;
+  margin-left: auto;
   padding: 14px 18px;
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 999px;

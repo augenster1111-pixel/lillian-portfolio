@@ -1,5 +1,6 @@
 (function () {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobileMotion = window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)').matches;
   const body = document.body;
 
   const primaryTitleSelectors = [
@@ -58,6 +59,8 @@
   ];
 
   function initVariableProximity(root = document) {
+    if (isMobileMotion) return;
+
     const targets = [...root.querySelectorAll('[data-variable-proximity]')].filter((target) => !target.dataset.vpReady);
     if (!targets.length) return;
 
@@ -160,7 +163,7 @@
   function initHeroParallax() {
     const hero = document.querySelector('.hero');
     const background = document.querySelector('.hero-background-layer');
-    if (!hero || !background || reducedMotion) return;
+    if (!hero || !background || reducedMotion || isMobileMotion) return;
 
     const target = { x: 0, y: 0 };
     const current = { x: 0, y: 0 };
@@ -200,7 +203,7 @@
 
   function initAboutTilt() {
     const cards = [...document.querySelectorAll('#about .about-gallery-card')];
-    if (!cards.length || reducedMotion) return;
+    if (!cards.length || reducedMotion || isMobileMotion) return;
 
     cards.forEach((card) => {
       let raf = 0;
@@ -242,6 +245,11 @@
 
   function init() {
     body.classList.add('motion-ready');
+    if (isMobileMotion) {
+      document.querySelectorAll('.is-physics-active, .is-hovering, .is-hovered, .is-active-physics, .is-focus').forEach((node) => {
+        node.classList.remove('is-physics-active', 'is-hovering', 'is-hovered', 'is-active-physics', 'is-focus');
+      });
+    }
     initVariableProximity();
     markMotionTargets();
     initRevealObserver();

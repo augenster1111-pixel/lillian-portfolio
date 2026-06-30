@@ -25,11 +25,14 @@
         <button class="theme-option is-active" type="button" data-theme-set="dark">深色</button>
         <button class="theme-option" type="button" data-theme-set="light">浅色</button>
       </div>
+      <button class="mobile-menu-toggle" type="button" aria-label="打开导航" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
       <div class="nav-links">
         <a class="active" href="#home">Home<sup>01</sup></a>
         <a href="#about">About<sup>02</sup></a>
         <a href="#projects">Work<sup>03</sup></a>
-        <a href="#contact">Contract<sup>04</sup></a>
+        <a href="#contact">Contact<sup>04</sup></a>
       </div>
     </nav>
   </header>
@@ -192,10 +195,28 @@
         <span class="availability reveal"><i></i> AVAILABLE FOR WORK</span>
         <h2 class="reveal" data-variable-proximity>LET'S MAKE<br><em>SOMETHING MOVE.</em></h2>
         <p class="contact-lead reveal">如果你正在寻找游戏视觉、AIGC 广告创意或买量素材设计伙伴，欢迎和我聊聊。</p>
-        <a class="email-link ui-cta reveal" href="mailto:augenster1111@gmail.com">下载简历<span>→</span></a>
+        <div class="contact-actions reveal">
+          <a class="contact-download ui-cta" href="media/about%20me/%E6%9D%8E%E5%AE%89%E6%AC%A3%E7%9A%84%E4%B8%AA%E4%BA%BA%E7%AE%80%E5%8E%86.pdf" download>下载简历<span>→</span></a>
+          <div class="contact-socials" aria-label="联系我">
+            <button class="contact-icon-btn" type="button" data-contact-modal="wechat" aria-label="打开微信二维码">
+              <img class="contact-icon-image contact-icon-dark" src="media/about%20me/%E5%BE%AE%E4%BF%A1logo-%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F.webp" alt="">
+              <img class="contact-icon-image contact-icon-light" src="media/about%20me/%E5%BE%AE%E4%BF%A1logo-%E6%B5%85%E8%89%B2%E6%A8%A1%E5%BC%8F.webp" alt="">
+            </button>
+            <button class="contact-icon-btn" type="button" data-contact-modal="email" aria-label="打开邮箱弹窗">
+              <img class="contact-icon-image contact-icon-dark" src="media/about%20me/%E9%82%AE%E4%BB%B6logo-%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F.webp" alt="">
+              <img class="contact-icon-image contact-icon-light" src="media/about%20me/%E9%82%AE%E4%BB%B6logo-%E6%B5%85%E8%89%B2%E6%A8%A1%E5%BC%8F.webp" alt="">
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   </main>
+
+  <div class="contact-modal-overlay is-hidden" aria-hidden="true"></div>
+  <div class="contact-modal is-hidden" role="dialog" aria-modal="true" aria-label="联系方式" tabindex="-1">
+    <button class="contact-modal-close" type="button" aria-label="关闭弹窗">×</button>
+    <div class="contact-modal-content"></div>
+  </div>
 
   <footer class="footer">
     <div class="shell footer-row"><a class="brand" href="#home">LILLIAN<span>☆</span></a><a href="#home">BACK TO TOP ↑</a></div>
@@ -205,8 +226,9 @@
   <script src="scripts/color-bends.js?v=20260628-2"></script>
   <script src="scripts/work.js?v=restore-20260628-2"></script>
   <script src="scripts/interactions.js"></script>
+  <script src="scripts/contact-modal.js"></script>
   <script src="scripts/star-trail.js"></script>
   <script src="scripts/hero.js"></script>
-  <script src="scripts/router.js"></script>
+  <script src="scripts/router.js?v=20260630-about-mobile"></script>
 </body>
 </html>

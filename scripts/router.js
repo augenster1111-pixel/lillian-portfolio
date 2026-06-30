@@ -61,21 +61,30 @@ function showProject(projectName) {
 
 function hideProjects() {
   projectTabs.forEach((tab) => {
-    tab.classList.remove('is-active');
+    tab.classList.remove('is-active', 'is-locked');
     tab.setAttribute('aria-selected', 'false');
   });
-  projectPanels.forEach((panel) => panel.classList.remove('is-active'));
-  document.querySelectorAll('.project-category').forEach((category) => category.classList.remove('is-active'));
+  projectPanels.forEach((panel) => panel.classList.remove('is-active', 'is-locked'));
+  document.querySelectorAll('.project-category').forEach((category) => category.classList.remove('is-active', 'is-locked'));
 }
 
 projectTabs.forEach((tab) => {
   tab.addEventListener('mouseenter', () => {
+    if (window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)').matches) return;
     if (!lockedProject) showProject(tab.dataset.project);
   });
   tab.addEventListener('focus', () => {
+    if (window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)').matches) return;
     if (!lockedProject) showProject(tab.dataset.project);
   });
   tab.addEventListener('click', () => {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile && lockedProject === tab.dataset.project) {
+      lockedProject = null;
+      projectBrowser?.classList.remove('has-locked');
+      hideProjects();
+      return;
+    }
     lockedProject = tab.dataset.project;
     projectBrowser?.classList.add('has-locked');
     showProject(lockedProject);
@@ -124,21 +133,78 @@ if (contactButton) {
   contactButton.addEventListener('click', () => contactButton.classList.add('is-active'));
 }
 
+let mobileAboutActiveIndex = 0;
+let mobileAboutStartX = 0;
+let mobileAboutStartY = 0;
+let mobileAboutDragging = false;
+let mobileAboutSuppressClick = false;
+const mobileAboutQuery = window.matchMedia('(max-width: 768px)');
+
+const renderMobileAboutDeck = () => {
+  if (!aboutGallery || !aboutCards.length) return;
+  const isMobile = mobileAboutQuery.matches;
+  aboutGallery.classList.toggle('is-mobile-deck', isMobile);
+  if (isMobile) {
+    aboutGallery.classList.remove('is-hovering');
+  }
+  aboutCards.forEach((card, index) => {
+    card.classList.remove('is-active', 'is-prev', 'is-next', 'is-hidden', 'is-hovered');
+    if (!isMobile) return;
+
+    const previousIndex = (mobileAboutActiveIndex - 1 + aboutCards.length) % aboutCards.length;
+    const nextIndex = (mobileAboutActiveIndex + 1) % aboutCards.length;
+    card.classList.toggle('is-active', index === mobileAboutActiveIndex);
+    card.classList.toggle('is-prev', index === previousIndex);
+    card.classList.toggle('is-next', index === nextIndex);
+    card.classList.toggle('is-hidden', index !== mobileAboutActiveIndex && index !== previousIndex && index !== nextIndex);
+    card.setAttribute('aria-pressed', String(index === mobileAboutActiveIndex));
+  });
+  if (isMobile) aboutGallery.classList.add('has-active');
+};
+
+const moveMobileAboutDeck = (step) => {
+  mobileAboutActiveIndex = (mobileAboutActiveIndex + step + aboutCards.length) % aboutCards.length;
+  renderMobileAboutDeck();
+};
+
 aboutCards.forEach((card) => {
+  const cardIndex = aboutCards.indexOf(card);
   card.tabIndex = 0;
   card.setAttribute('aria-pressed', 'false');
   card.addEventListener('mouseenter', () => {
+    if (mobileAboutQuery.matches) {
+      aboutGallery.classList.remove('is-hovering');
+      card.classList.remove('is-hovered');
+      renderMobileAboutDeck();
+      return;
+    }
     const activeCard = aboutCards.find((item) => item.classList.contains('is-active'));
     if (activeCard && activeCard !== card) return;
     aboutGallery.classList.add('is-hovering');
     card.classList.add('is-hovered');
   });
   card.addEventListener('mouseleave', () => {
+    if (mobileAboutQuery.matches) {
+      aboutGallery.classList.remove('is-hovering');
+      card.classList.remove('is-hovered');
+      renderMobileAboutDeck();
+      return;
+    }
     aboutGallery.classList.remove('is-hovering');
     card.classList.remove('is-hovered');
   });
   const activateCard = () => {
     const detailHref = card.dataset.aboutDetailHref;
+    if (mobileAboutQuery.matches) {
+      if (mobileAboutSuppressClick) return;
+      if (detailHref) {
+        window.location.href = detailHref;
+        return;
+      }
+      mobileAboutActiveIndex = cardIndex;
+      renderMobileAboutDeck();
+      return;
+    }
     if (detailHref) {
       window.location.href = detailHref;
       return;
@@ -158,6 +224,40 @@ aboutCards.forEach((card) => {
     }
   });
 });
+
+if (aboutGallery && aboutCards.length) {
+  aboutGallery.addEventListener('touchstart', (event) => {
+    if (!mobileAboutQuery.matches || !event.touches.length) return;
+    aboutGallery.classList.remove('is-hovering');
+    aboutCards.forEach((card) => card.classList.remove('is-hovered'));
+    const touch = event.touches[0];
+    mobileAboutStartX = touch.clientX;
+    mobileAboutStartY = touch.clientY;
+    mobileAboutDragging = true;
+  }, { passive: true });
+
+  aboutGallery.addEventListener('touchend', (event) => {
+    if (!mobileAboutQuery.matches || !mobileAboutDragging) return;
+    mobileAboutDragging = false;
+    const touch = event.changedTouches[0];
+    if (!touch) return;
+    const deltaX = touch.clientX - mobileAboutStartX;
+    const deltaY = touch.clientY - mobileAboutStartY;
+    if (Math.abs(deltaX) < 36 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) return;
+    mobileAboutSuppressClick = true;
+    window.setTimeout(() => {
+      mobileAboutSuppressClick = false;
+    }, 260);
+    moveMobileAboutDeck(deltaX < 0 ? 1 : -1);
+  }, { passive: true });
+
+  mobileAboutQuery.addEventListener?.('change', renderMobileAboutDeck);
+  window.addEventListener('resize', () => {
+    renderMobileAboutDeck();
+  }, { passive: true });
+
+  renderMobileAboutDeck();
+}
 
 galleryVideos.forEach((video) => {
   const card = video.closest('.masonry-video');

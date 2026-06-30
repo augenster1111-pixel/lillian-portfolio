@@ -1,5 +1,6 @@
 (() => {
   const contactEmail = 'augenster1111@gmail.com';
+  const qrPath = 'media/about%20me/%E5%BE%AE%E4%BF%A1%E4%BA%8C%E7%BB%B4%E7%A0%81.webp';
   let closeTimer = null;
   let toastTimer = null;
 
@@ -7,7 +8,7 @@
     if (type === 'email') {
       return `
         <h3>Email</h3>
-        <p class="contact-modal-email">augenster1111@gmail.com</p>
+        <p class="contact-modal-email">${contactEmail}</p>
         <button class="copy-email-btn" type="button">复制邮箱</button>
         <p class="copy-email-toast" aria-live="polite">已复制邮箱</p>
       `;
@@ -16,7 +17,7 @@
     return `
       <h3>微信</h3>
       <p>扫码添加微信</p>
-      <img class="contact-modal-qr" src="media/about%20me/微信二维码.webp" alt="微信二维码">
+      <img class="contact-modal-qr" src="${qrPath}" alt="微信二维码">
     `;
   }
 
@@ -27,10 +28,7 @@
     const modalContent = document.querySelector('.contact-modal-content');
     const closeBtn = document.querySelector('.contact-modal-close');
 
-    if (!modalButtons.length || !overlay || !modal || !modalContent) {
-      console.warn('Contact modal elements not found');
-      return;
-    }
+    if (!modalButtons.length || !overlay || !modal || !modalContent) return;
 
     function openContactModal(type) {
       window.clearTimeout(closeTimer);
@@ -75,6 +73,7 @@
           textarea.remove();
         }
         if (toast) {
+          toast.textContent = '已复制邮箱';
           toast.classList.add('is-visible');
           window.clearTimeout(toastTimer);
           toastTimer = window.setTimeout(() => {

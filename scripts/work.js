@@ -39,6 +39,76 @@ function renderOtherWorksHeading() {
   }
 }
 
+function initMobileOtherWorksDeck(container) {
+  const cards = [...container.querySelectorAll('.masonry-item')];
+  if (!cards.length) return;
+
+  const mobileQuery = window.matchMedia('(max-width: 768px)');
+  let activeIndex = 0;
+  let startX = 0;
+  let startY = 0;
+  let isDragging = false;
+  let isAnimating = false;
+
+  const renderDeck = () => {
+    const isMobile = mobileQuery.matches;
+    container.classList.toggle('is-mobile-deck', isMobile);
+    cards.forEach((card, index) => {
+      card.classList.remove('is-active', 'is-prev', 'is-next', 'is-hidden');
+      if (!isMobile) return;
+
+      const previousIndex = (activeIndex - 1 + cards.length) % cards.length;
+      const nextIndex = (activeIndex + 1) % cards.length;
+      card.classList.toggle('is-active', index === activeIndex);
+      card.classList.toggle('is-prev', index === previousIndex);
+      card.classList.toggle('is-next', index === nextIndex);
+      card.classList.toggle('is-hidden', index !== activeIndex && index !== previousIndex && index !== nextIndex);
+    });
+  };
+
+  const moveDeck = (step) => {
+    if (isAnimating) return;
+    isAnimating = true;
+    activeIndex = (activeIndex + step + cards.length) % cards.length;
+    renderDeck();
+    window.setTimeout(() => {
+      isAnimating = false;
+    }, 260);
+  };
+
+  container.addEventListener('touchstart', (event) => {
+    if (!mobileQuery.matches || !event.touches.length) return;
+    const touch = event.touches[0];
+    startX = touch.clientX;
+    startY = touch.clientY;
+    isDragging = true;
+  }, { passive: true });
+
+  container.addEventListener('touchend', (event) => {
+    if (!mobileQuery.matches || !isDragging) return;
+    isDragging = false;
+    const touch = event.changedTouches[0];
+    if (!touch) return;
+
+    const deltaX = touch.clientX - startX;
+    const deltaY = touch.clientY - startY;
+    if (Math.abs(deltaX) < 36 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) return;
+    moveDeck(deltaX < 0 ? 1 : -1);
+  }, { passive: true });
+
+  cards.forEach((card, index) => {
+    card.addEventListener('click', (event) => {
+      if (!mobileQuery.matches || index === activeIndex) return;
+      event.preventDefault();
+      activeIndex = index;
+      renderDeck();
+    });
+  });
+
+  mobileQuery.addEventListener?.('change', renderDeck);
+  renderDeck();
+}
+
 function renderOtherWorksPreview() {
   const target = document.querySelector('[data-other-preview]');
   const source = window.OTHER_WORKS_DATA?.items || [];
@@ -53,6 +123,7 @@ function renderOtherWorksPreview() {
   target.innerHTML = items.map((item) => buildOtherWorkCard(item, mediaBase)).join('');
   applyControlledMasonryPattern(target);
   target.querySelectorAll('.reveal').forEach((node) => node.classList.add('is-visible'));
+  initMobileOtherWorksDeck(target);
   if (typeof bindOtherWorksPhysics === 'function') {
     bindOtherWorksPhysics(target);
   }

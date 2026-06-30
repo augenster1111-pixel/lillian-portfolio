@@ -1,4 +1,9 @@
-﻿function bindOtherWorksPhysics(container) {
+function bindOtherWorksPhysics(container) {
+  if (window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)').matches) {
+    container.classList.remove('is-physics-active');
+    return;
+  }
+
   const cards = [...container.querySelectorAll('.masonry-item')];
   if (!cards.length) return;
 
@@ -63,6 +68,10 @@
 }
 
 function initVariableProximity(root = document) {
+  if (window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)').matches) {
+    return;
+  }
+
   const targets = [...root.querySelectorAll('[data-variable-proximity]')].filter((target) => !target.dataset.vpReady);
   if (!targets.length) return;
 

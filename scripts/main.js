@@ -41,4 +41,32 @@ function initThemeToggle() {
   });
 }
 
+function initMobileNavigation() {
+  const toggle = document.querySelector('.mobile-menu-toggle');
+  const nav = document.querySelector('.nav-links');
+  if (!toggle || !nav) return;
+
+  const close = () => {
+    nav.classList.remove('is-mobile-open');
+    toggle.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+
+  toggle.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const isOpen = nav.classList.toggle('is-mobile-open');
+    toggle.classList.toggle('is-open', isOpen);
+    toggle.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
+  document.addEventListener('click', (event) => {
+    if (!nav.contains(event.target) && !toggle.contains(event.target)) close();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') close();
+  });
+}
+
 initThemeToggle();
+initMobileNavigation();
