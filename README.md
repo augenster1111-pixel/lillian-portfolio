@@ -30,3 +30,4 @@ python -m http.server 8000
 ## 部署方式
 
 将 `website-code` 目录作为 Vercel 项目根目录部署。入口文件为根目录下的 `index.html`，静态资源使用相对路径引用。
+Trigger Vercel Deploy
