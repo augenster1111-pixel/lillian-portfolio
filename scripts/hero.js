@@ -1,9 +1,11 @@
-﻿function initHeroFerrofluid() {
+function initHeroFerrofluid() {
   const canvas = document.querySelector('.hero-ferrofluid');
   const hero = document.querySelector('.hero');
   if (!canvas || !hero) return;
 
   const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
   const blobs = Array.from({ length: 11 }, (_, index) => ({
     x: 0,
     y: 0,
@@ -27,6 +29,7 @@
   let height = 0;
   let dpr = 1;
   let running = true;
+  let frameId = 0;
 
   const resize = () => {
     const rect = canvas.getBoundingClientRect();
@@ -61,7 +64,7 @@
   };
 
   const render = (time = 0) => {
-    requestAnimationFrame(render);
+    frameId = requestAnimationFrame(render);
     if (!running || !width || !height) return;
 
     const t = time * 0.001;
@@ -94,7 +97,7 @@
     mouse.tx = event.clientX - rect.left;
     mouse.ty = event.clientY - rect.top;
     mouse.active = true;
-  });
+  }, { passive: true });
 
   canvas.addEventListener('pointerleave', () => {
     mouse.active = false;
@@ -102,12 +105,32 @@
 
   const visibilityObserver = new IntersectionObserver((entries) => {
     running = entries.some((entry) => entry.isIntersecting);
+    if (running && !frameId) frameId = requestAnimationFrame(render);
   }, { threshold: 0.05 });
   visibilityObserver.observe(hero);
 
-  window.addEventListener('resize', resize);
+  window.addEventListener('resize', resize, { passive: true });
   resize();
-  requestAnimationFrame(render);
+  frameId = requestAnimationFrame(render);
 }
 
-initHeroFerrofluid();
+function deferHeroInit() {
+  const start = () => {
+    try {
+      console.log('[portfolio] hero motion: start');
+      initHeroFerrofluid();
+      console.log('[portfolio] hero motion: ready');
+    } catch (error) {
+      console.warn('[portfolio] hero motion: failed', error);
+    }
+  };
+
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(start, { timeout: 1800 });
+    return;
+  }
+
+  window.setTimeout(start, 700);
+}
+
+deferHeroInit();

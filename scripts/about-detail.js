@@ -21,7 +21,11 @@
   setText('[data-about-location]', data.profile.location);
 
   const avatar = document.querySelector('[data-about-avatar]');
-  if (avatar && data.profile.avatar) avatar.src = encodeURI(data.profile.avatar);
+  if (avatar && data.profile.avatar) {
+    avatar.loading = 'lazy';
+    avatar.decoding = 'async';
+    avatar.src = encodeURI(data.profile.avatar);
+  }
 
   const intro = document.querySelector('[data-about-intro]');
   if (intro) {

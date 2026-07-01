@@ -1,4 +1,15 @@
 (function () {
+  const startWhenIdle = (task) => {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(task, { timeout: 2200 });
+      return;
+    }
+    window.setTimeout(task, 900);
+  };
+
+  startWhenIdle(() => {
+  try {
+  console.log('[portfolio] star trail: start');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = window.matchMedia('(pointer: fine)');
 
@@ -191,5 +202,10 @@
       stars.length = 0;
       ctx.clearRect(0, 0, width, height);
     }
+  });
+  console.log('[portfolio] star trail: ready');
+  } catch (error) {
+    console.warn('[portfolio] star trail: failed', error);
+  }
   });
 })();

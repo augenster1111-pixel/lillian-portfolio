@@ -1,6 +1,83 @@
 const projectId = document.body.dataset.projectId;
 const project = window.PROJECTS_DATA?.[projectId];
 
+function logStep(label, state = 'ready', detail) {
+  const message = `[portfolio] project ${projectId || 'unknown'} ${label}: ${state}`;
+  if (detail) console.warn(message, detail);
+  else console.log(message);
+}
+
+function runSafely(label, task) {
+  try {
+    logStep(label, 'start');
+    task();
+    logStep(label, 'ready');
+  } catch (error) {
+    logStep(label, 'failed', error);
+  }
+}
+
+function deferNonCriticalTask(task) {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(task, { timeout: 1600 });
+    return;
+  }
+  window.setTimeout(task, 500);
+}
+
+function inferPosterFromMedia(src = '') {
+  const posters = {
+    '01': '../../media/project/01-game-buy-volume.webp',
+    '02': '../../media/project/02-ai-advertising-video.webp',
+    '03': '../../media/detail/03游戏营销视觉设计/cover.webp',
+    '04': '../../media/project/04-other-project.webp'
+  };
+  return posters[projectId] || (src.includes('/03游戏营销视觉设计/') ? posters['03'] : posters['04']);
+}
+
+function initLazyVideos(scope = document) {
+  const videos = [...scope.querySelectorAll('video[data-src]')];
+  if (!videos.length) return;
+
+  const loadVideo = (video) => {
+    if (video.dataset.loaded === 'true') return;
+    if (!video.dataset.src) return;
+    video.dataset.loaded = 'true';
+    video.src = video.dataset.src;
+    video.preload = 'metadata';
+    video.load();
+  };
+
+  const bindError = (video) => {
+    video.addEventListener('error', () => {
+      logStep('video', 'failed', video.dataset.src || video.currentSrc);
+      video.removeAttribute('src');
+      video.load();
+    }, { once: true });
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        loadVideo(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '260px 0px' });
+
+    videos.forEach((video) => {
+      bindError(video);
+      observer.observe(video);
+    });
+    return;
+  }
+
+  videos.forEach((video) => {
+    bindError(video);
+    window.setTimeout(() => loadVideo(video), 1200);
+  });
+}
+
 function syncStoredTheme() {
   try {
     document.body.classList.toggle('theme-light', localStorage.getItem('lillian-portfolio-theme') === 'light');
@@ -100,9 +177,11 @@ function openProjectMediaPreview(media) {
     video.className = 'project-media-preview-content';
     video.src = src;
     video.controls = true;
-    video.autoplay = true;
     video.playsInline = true;
     video.muted = false;
+    video.preload = 'metadata';
+    const poster = media.getAttribute('poster');
+    video.poster = poster || inferPosterFromMedia(src);
     stage.append(video);
     video.play().catch(() => {});
   } else {
@@ -110,6 +189,8 @@ function openProjectMediaPreview(media) {
     image.className = 'project-media-preview-content';
     image.src = src;
     image.alt = media.alt || '';
+    image.loading = 'eager';
+    image.decoding = 'async';
     stage.append(image);
   }
 
@@ -268,6 +349,8 @@ if (!project) {
   if (cover) {
     cover.src = project.cover;
     cover.alt = project.titleLines.join(' ');
+    cover.loading = 'lazy';
+    cover.decoding = 'async';
   }
 
   const sectionNav = document.querySelector('[data-section-nav]');
@@ -537,6 +620,7 @@ if (!project) {
         image.src = src;
         image.alt = `${set.title} 商店图 ${String(index + 1).padStart(2, '0')}`;
         image.loading = 'lazy';
+        image.decoding = 'async';
 
         card.append(image);
         card.addEventListener('mouseenter', () => {
@@ -587,7 +671,7 @@ if (!project) {
     });
   };
 
-  renderStackGallery();
+  deferNonCriticalTask(() => runSafely('stack gallery', renderStackGallery));
 
   const renderWideKvGallery = () => {
     const gallery = document.querySelector('[data-wide-kv-gallery]');
@@ -659,6 +743,7 @@ if (!project) {
         image.src = src;
         image.alt = `${set.title} KV ${String(index + 1).padStart(2, '0')}`;
         image.loading = 'lazy';
+        image.decoding = 'async';
         card.append(image);
 
         card.addEventListener('mouseenter', () => {
@@ -696,7 +781,7 @@ if (!project) {
     gallery.replaceChildren(...nodes);
   };
 
-  renderWideKvGallery();
+  deferNonCriticalTask(() => runSafely('wide gallery', renderWideKvGallery));
 
   const createSectionCard = (section) => {
     const card = document.createElement('article');
@@ -735,6 +820,8 @@ if (!project) {
       const image = document.createElement('img');
       image.src = section.image;
       image.alt = section.title;
+      image.loading = 'lazy';
+      image.decoding = 'async';
       image.addEventListener('error', () => {
         image.replaceWith(createMediaPlaceholder('image'));
         card.classList.remove('has-image');
@@ -745,12 +832,13 @@ if (!project) {
     }
     if (section.video) {
       const video = document.createElement('video');
-      video.src = section.video;
+      video.dataset.src = section.video;
       video.muted = true;
       video.loop = true;
       video.playsInline = true;
       video.controls = true;
-      video.preload = 'metadata';
+      video.preload = 'none';
+      video.poster = section.poster || inferPosterFromMedia(section.video);
       video.addEventListener('error', () => {
         video.replaceWith(createMediaPlaceholder('video'));
         card.classList.remove('has-video');
@@ -796,6 +884,8 @@ if (!project) {
         const image = document.createElement('img');
         image.src = item.image;
         image.alt = item.title;
+        image.loading = 'lazy';
+        image.decoding = 'async';
         image.addEventListener('error', () => media.classList.add('is-placeholder'), { once: true });
         media.append(image);
       } else {
@@ -942,12 +1032,13 @@ if (!project) {
     mediaSection.hidden = false;
     videoGrid.replaceChildren(...project.videos.map((source) => {
       const video = document.createElement('video');
-      video.src = source;
+      video.dataset.src = source;
       video.muted = true;
       video.loop = true;
       video.playsInline = true;
       video.controls = true;
-      video.preload = 'metadata';
+      video.preload = 'none';
+      video.poster = inferPosterFromMedia(source);
       return video;
     }));
   }
@@ -955,4 +1046,5 @@ if (!project) {
   bindExclusiveProjectVideos(document);
   bindProjectMobileMediaPreview(document);
   initWork02BorderGlow(document);
+  initLazyVideos(document);
 }

@@ -31,9 +31,11 @@ function buildCard(item, mediaBase) {
   const title = escapeHtml(item.title || item.label || 'Other Work');
   const caption = escapeHtml(item.label || title);
   const badge = item.badge ? `<span class="video-badge">${escapeHtml(item.badge)}</span>` : '';
+  const poster = item.poster || item.image || '../media/project/04-other-project.webp';
+  const posterSrc = poster.includes('/') ? poster : `${mediaBase}${poster}`;
   const media = type === 'video'
-    ? `<video src="${escapeHtml(src)}" muted loop playsinline preload="metadata"></video>${badge}`
-    : `<img src="${escapeHtml(src)}" alt="${title}" loading="lazy">`;
+    ? `<video data-src="${escapeHtml(src)}" poster="${escapeHtml(posterSrc)}" muted loop playsinline preload="none"></video>${badge}`
+    : `<img src="${escapeHtml(src)}" alt="${title}" loading="lazy" decoding="async">`;
 
   return `<figure class="masonry-item${sizeClass}${videoClass}" data-preview-type="${type}" data-preview-src="${escapeHtml(src)}" data-preview-title="${title}" tabindex="0">${media}<figcaption>${caption}</figcaption></figure>`;
 }
@@ -171,8 +173,8 @@ function openPreview(card) {
 
   document.querySelectorAll('.masonry-video video').forEach((video) => video.pause());
   previewStage.innerHTML = type === 'video'
-    ? `<video class="media-preview-content" src="${escapeHtml(src)}" controls autoplay playsinline></video>`
-    : `<img class="media-preview-content" src="${escapeHtml(src)}" alt="${escapeHtml(title)}">`;
+    ? `<video class="media-preview-content" src="${escapeHtml(src)}" poster="../media/project/04-other-project.webp" controls playsinline preload="metadata"></video>`
+    : `<img class="media-preview-content" src="${escapeHtml(src)}" alt="${escapeHtml(title)}" decoding="async">`;
   previewModal.classList.add('is-open');
   previewModal.setAttribute('aria-hidden', 'false');
   document.documentElement.classList.add('is-preview-open');
@@ -180,6 +182,47 @@ function openPreview(card) {
 
   const previewVideo = previewStage.querySelector('video');
   previewVideo?.play().catch(() => {});
+}
+
+function initLazyVideos(scope = document) {
+  const videos = [...scope.querySelectorAll('video[data-src]')];
+  if (!videos.length) return;
+
+  const loadVideo = (video) => {
+    if (video.dataset.loaded === 'true') return;
+    video.dataset.loaded = 'true';
+    video.src = video.dataset.src;
+    video.preload = 'metadata';
+    video.load();
+  };
+
+  const onError = (video) => {
+    video.addEventListener('error', () => {
+      console.warn('[portfolio] archive video failed', video.dataset.src);
+      video.removeAttribute('src');
+      video.load();
+    }, { once: true });
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        loadVideo(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '240px 0px' });
+    videos.forEach((video) => {
+      onError(video);
+      observer.observe(video);
+    });
+    return;
+  }
+
+  videos.forEach((video) => {
+    onError(video);
+    window.setTimeout(() => loadVideo(video), 1200);
+  });
 }
 
 function bindVideoHover() {
@@ -211,21 +254,28 @@ function renderArchiveGrid() {
 
   isMobileArchiveLayout = useMobileLayout;
 
-  if (useMobileLayout) {
-    const imageItems = items.filter((item) => item.type !== 'video');
-    const videoItems = items.filter((item) => item.type === 'video');
-    grid.innerHTML = [
-      imageItems.length ? buildGroupHeading('图片') : '',
-      imageItems.map((item) => buildCard(item, mediaBase)).join(''),
-      videoItems.length ? buildGroupHeading('视频') : '',
-      videoItems.map((item) => buildCard(item, mediaBase)).join('')
-    ].join('');
-  } else {
-    grid.innerHTML = items.map((item) => buildCard(item, mediaBase)).join('');
-  }
+  try {
+    console.log('[portfolio] archive grid: start');
+    if (useMobileLayout) {
+      const imageItems = items.filter((item) => item.type !== 'video');
+      const videoItems = items.filter((item) => item.type === 'video');
+      grid.innerHTML = [
+        imageItems.length ? buildGroupHeading('图片') : '',
+        imageItems.map((item) => buildCard(item, mediaBase)).join(''),
+        videoItems.length ? buildGroupHeading('视频') : '',
+        videoItems.map((item) => buildCard(item, mediaBase)).join('')
+      ].join('');
+    } else {
+      grid.innerHTML = items.map((item) => buildCard(item, mediaBase)).join('');
+    }
 
-  bindPreviewCards();
-  bindVideoHover();
+    initLazyVideos(grid);
+    bindPreviewCards();
+    bindVideoHover();
+    console.log('[portfolio] archive grid: ready');
+  } catch (error) {
+    console.warn('[portfolio] archive grid: failed', error);
+  }
 }
 
 renderArchiveGrid();

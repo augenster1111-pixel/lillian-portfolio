@@ -1,4 +1,4 @@
-﻿function escapeHtml(value = '') {
+function escapeHtml(value = '') {
   return String(value).replace(/[&<>"']/g, (char) => ({
     '&': '&amp;',
     '<': '&lt;',
@@ -6,6 +6,40 @@
     '"': '&quot;',
     "'": '&#39;'
   }[char]));
+}
+
+function runSafely(label, task) {
+  try {
+    console.log(`[portfolio] ${label}: start`);
+    task();
+    console.log(`[portfolio] ${label}: ready`);
+  } catch (error) {
+    console.warn(`[portfolio] ${label}: failed`, error);
+  }
+}
+
+function deferNonCriticalTask(task) {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(task, { timeout: 1800 });
+    return;
+  }
+  window.setTimeout(task, 600);
+}
+
+function loadDeferredVideo(video, options = {}) {
+  if (!video || video.dataset.loaded === 'true') return;
+  const source = video.dataset.src || video.dataset.darkSrc || video.getAttribute('src');
+  if (!source) return;
+
+  video.dataset.loaded = 'true';
+  video.preload = options.preload || 'metadata';
+  video.src = source;
+  video.load();
+  if (options.play) {
+    video.play().catch((error) => {
+      console.warn('[portfolio] hero video play skipped', error);
+    });
+  }
 }
 
 function initThemeToggle() {
@@ -20,8 +54,9 @@ function initThemeToggle() {
     if (toggle) toggle.dataset.themeCurrent = mode;
     document.querySelectorAll('.hero-bg-video[data-dark-src][data-light-src]').forEach((video) => {
       const nextSrc = mode === 'light' ? video.dataset.lightSrc : video.dataset.darkSrc;
-      if (nextSrc && video.getAttribute('src') !== nextSrc) {
-        video.setAttribute('src', nextSrc);
+      video.dataset.src = nextSrc || '';
+      if (video.dataset.loaded === 'true' && nextSrc && video.getAttribute('src') !== nextSrc) {
+        video.src = nextSrc;
         video.load();
         video.play().catch(() => {});
       }
@@ -68,5 +103,23 @@ function initMobileNavigation() {
   });
 }
 
-initThemeToggle();
-initMobileNavigation();
+function initDeferredHeroVideo() {
+  const videos = document.querySelectorAll('.hero-bg-video');
+  if (!videos.length) return;
+
+  videos.forEach((video) => {
+    video.addEventListener('error', () => {
+      console.warn('[portfolio] hero video failed, poster remains visible', video.currentSrc || video.dataset.src);
+      video.removeAttribute('src');
+      video.load();
+    }, { once: true });
+  });
+
+  deferNonCriticalTask(() => {
+    videos.forEach((video) => loadDeferredVideo(video, { preload: 'metadata', play: true }));
+  });
+}
+
+runSafely('theme toggle', initThemeToggle);
+runSafely('mobile navigation', initMobileNavigation);
+runSafely('deferred hero video', initDeferredHeroVideo);

@@ -128,6 +128,16 @@ function initVariableProximity(root = document) {
   window.addEventListener('scroll', requestUpdate, { passive: true });
 }
 
-renderOtherWorksHeading();
-renderOtherWorksPreview();
-initVariableProximity();
+function runInteractionStep(label, task) {
+  try {
+    console.log(`[portfolio] ${label}: start`);
+    task();
+    console.log(`[portfolio] ${label}: ready`);
+  } catch (error) {
+    console.warn(`[portfolio] ${label}: failed`, error);
+  }
+}
+
+runInteractionStep('other works heading', renderOtherWorksHeading);
+runInteractionStep('other works preview', renderOtherWorksPreview);
+runInteractionStep('variable proximity', initVariableProximity);

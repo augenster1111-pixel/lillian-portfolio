@@ -6,9 +6,11 @@
   const caption = escapeHtml(item.label || item.title || 'OTHER WORK');
   const title = escapeHtml(item.title || caption);
   const badge = item.badge ? `<span class="video-badge">${escapeHtml(item.badge)}</span>` : '';
+  const poster = item.poster || item.image || 'media/project/04-other-project.webp';
+  const posterSrc = poster.includes('/') ? poster : `${mediaBase}${poster}`;
   const media = type === 'video'
-    ? `<video src="${escapeHtml(src)}" muted loop playsinline preload="metadata"></video>${badge}`
-    : `<img src="${escapeHtml(src)}" alt="${title}" loading="lazy">`;
+    ? `<video data-src="${escapeHtml(src)}" poster="${escapeHtml(posterSrc)}" muted loop playsinline preload="none"></video>${badge}`
+    : `<img src="${escapeHtml(src)}" alt="${title}" loading="lazy" decoding="async">`;
 
   return `<figure class="masonry-item${sizeClass}${videoClass} reveal">${media}<figcaption>${caption}</figcaption></figure>`;
 }
@@ -120,12 +122,60 @@ function renderOtherWorksPreview() {
     .filter((item) => item.enabled !== false && item.showOnHome !== false)
     .slice(0, limit);
 
-  target.innerHTML = items.map((item) => buildOtherWorkCard(item, mediaBase)).join('');
-  applyControlledMasonryPattern(target);
-  target.querySelectorAll('.reveal').forEach((node) => node.classList.add('is-visible'));
-  initMobileOtherWorksDeck(target);
-  if (typeof bindOtherWorksPhysics === 'function') {
-    bindOtherWorksPhysics(target);
+  try {
+    console.log('[portfolio] other works preview: start');
+    target.innerHTML = items.map((item) => buildOtherWorkCard(item, mediaBase)).join('');
+    applyControlledMasonryPattern(target);
+    target.querySelectorAll('.reveal').forEach((node) => node.classList.add('is-visible'));
+    initLazyVideos(target);
+    initMobileOtherWorksDeck(target);
+    if (typeof bindOtherWorksPhysics === 'function') {
+      bindOtherWorksPhysics(target);
+    }
+    console.log('[portfolio] other works preview: ready');
+  } catch (error) {
+    console.warn('[portfolio] other works preview: failed', error);
   }
+}
+
+function initLazyVideos(scope = document) {
+  const videos = [...scope.querySelectorAll('video[data-src]')];
+  if (!videos.length) return;
+
+  const loadVideo = (video) => {
+    if (video.dataset.loaded === 'true') return;
+    video.dataset.loaded = 'true';
+    video.src = video.dataset.src;
+    video.preload = 'metadata';
+    video.load();
+  };
+
+  const onError = (video) => {
+    video.addEventListener('error', () => {
+      console.warn('[portfolio] preview video failed', video.dataset.src);
+      video.removeAttribute('src');
+      video.load();
+    }, { once: true });
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        loadVideo(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '240px 0px' });
+    videos.forEach((video) => {
+      onError(video);
+      observer.observe(video);
+    });
+    return;
+  }
+
+  videos.forEach((video) => {
+    onError(video);
+    window.setTimeout(() => loadVideo(video), 1200);
+  });
 }
 
