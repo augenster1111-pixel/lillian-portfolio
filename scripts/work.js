@@ -127,8 +127,8 @@ function renderOtherWorksPreview() {
     target.innerHTML = items.map((item) => buildOtherWorkCard(item, mediaBase)).join('');
     applyControlledMasonryPattern(target);
     target.querySelectorAll('.reveal').forEach((node) => node.classList.add('is-visible'));
-    initLazyVideos(target);
     initMobileOtherWorksDeck(target);
+    initLazyVideos(target);
     if (typeof bindOtherWorksPhysics === 'function') {
       bindOtherWorksPhysics(target);
     }

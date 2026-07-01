@@ -41,12 +41,6 @@ body.theme-light .hero {
     radial-gradient(circle at 48% 40%, rgba(255,255,255,1), rgba(250,248,243,.98) 44%, rgba(239,234,224,.98) 100%);
 }
 
-body.theme-light .hero-bg-video {
-  opacity: .9;
-  filter: saturate(.95) contrast(1.02) brightness(1.02);
-  mix-blend-mode: normal;
-}
-
 body.theme-light .hero-ferrofluid {
   opacity: .1;
   mix-blend-mode: multiply;

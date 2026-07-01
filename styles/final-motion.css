@@ -417,7 +417,6 @@ body.theme-light .work04-cases h2.variable-proximity-ready .vp-line:nth-child(2)
   will-change: transform;
 }
 
-.hero-bg-video,
 .hero-background-layer::before {
   animation: finalHeroBreath 18s ease-in-out infinite;
   transform-origin: center;
@@ -552,7 +551,6 @@ body.theme-light #about .about-card-body {
   opacity: 1 !important;
 }
 
-body.theme-light .hero-bg-video,
 body.theme-light .hero-background-layer::before {
   animation-name: finalHeroBreathLight;
 }
@@ -586,7 +584,6 @@ body.theme-light .hero-background-layer::before {
     transition: none;
   }
 
-  .hero-bg-video,
   .hero-background-layer::before,
   .hero-background-layer::after,
   .contact-aura,
