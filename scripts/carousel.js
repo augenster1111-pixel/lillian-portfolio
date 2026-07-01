@@ -1,5 +1,5 @@
 (function () {
-  const isMobileWide = () => window.matchMedia("(max-width: 768px), (hover: none), (pointer: coarse)").matches;
+  const isMobileWide = () => window.matchMedia("(max-width: 768px)").matches;
 
   const initWideKvGallery = () => {
     const project = window.PROJECTS_DATA?.["03"];

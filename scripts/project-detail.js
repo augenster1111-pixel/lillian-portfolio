@@ -26,13 +26,8 @@ function deferNonCriticalTask(task) {
 }
 
 function inferPosterFromMedia(src = '') {
-  const posters = {
-    '01': '../../media/project/01-game-buy-volume.webp',
-    '02': '../../media/project/02-ai-advertising-video.webp',
-    '03': '../../media/detail/03游戏营销视觉设计/cover.webp',
-    '04': '../../media/project/04-other-project.webp'
-  };
-  return posters[projectId] || (src.includes('/03游戏营销视觉设计/') ? posters['03'] : posters['04']);
+  if (!src || !/\.mp4(?:[?#].*)?$/i.test(src)) return '';
+  return src.replace(/\.mp4(?:[?#].*)?$/i, '.poster.webp');
 }
 
 function initLazyVideos(scope = document) {
@@ -181,7 +176,8 @@ function openProjectMediaPreview(media) {
     video.muted = false;
     video.preload = 'metadata';
     const poster = media.getAttribute('poster');
-    video.poster = poster || inferPosterFromMedia(src);
+    const inferredPoster = poster || inferPosterFromMedia(src);
+    if (inferredPoster) video.poster = inferredPoster;
     stage.append(video);
     video.play().catch(() => {});
   } else {
@@ -676,6 +672,7 @@ if (!project) {
   const renderWideKvGallery = () => {
     const gallery = document.querySelector('[data-wide-kv-gallery]');
     if (projectId !== '03' || !gallery || !Array.isArray(project.wideGalleryImages)) return;
+    if (window.matchMedia('(min-width: 769px)').matches) return;
 
     const getWideMeta = (src) => {
       const fileName = decodeURIComponent(src.split('/').pop() || src);
@@ -838,7 +835,8 @@ if (!project) {
       video.playsInline = true;
       video.controls = true;
       video.preload = 'none';
-      video.poster = section.poster || inferPosterFromMedia(section.video);
+      const poster = section.poster || inferPosterFromMedia(section.video);
+      if (poster) video.poster = poster;
       video.addEventListener('error', () => {
         video.replaceWith(createMediaPlaceholder('video'));
         card.classList.remove('has-video');
@@ -1038,7 +1036,8 @@ if (!project) {
       video.playsInline = true;
       video.controls = true;
       video.preload = 'none';
-      video.poster = inferPosterFromMedia(source);
+      const poster = inferPosterFromMedia(source);
+      if (poster) video.poster = poster;
       return video;
     }));
   }

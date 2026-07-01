@@ -60,7 +60,7 @@ window.OTHER_WORKS_DATA = {
       title: "AI IMAGE",
       label: "EXPERIMENT · WEST GAME II",
       type: "image",
-      src: "P9-AI环境展示.webp",
+      src: "P9-AI环境展示.poster.webp",
       size: "wide",
       showOnHome: true
     },

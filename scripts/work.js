@@ -6,10 +6,10 @@
   const caption = escapeHtml(item.label || item.title || 'OTHER WORK');
   const title = escapeHtml(item.title || caption);
   const badge = item.badge ? `<span class="video-badge">${escapeHtml(item.badge)}</span>` : '';
-  const poster = item.poster || item.image || 'media/project/04-other-project.webp';
+  const poster = item.poster || item.image || (type === 'video' ? item.src.replace(/\.mp4(?:[?#].*)?$/i, '.poster.webp') : '');
   const posterSrc = poster.includes('/') ? poster : `${mediaBase}${poster}`;
   const media = type === 'video'
-    ? `<video data-src="${escapeHtml(src)}" poster="${escapeHtml(posterSrc)}" muted loop playsinline preload="none"></video>${badge}`
+    ? `<video data-src="${escapeHtml(src)}"${poster ? ` poster="${escapeHtml(posterSrc)}"` : ''} muted loop playsinline preload="none"></video>${badge}`
     : `<img src="${escapeHtml(src)}" alt="${title}" loading="lazy" decoding="async">`;
 
   return `<figure class="masonry-item${sizeClass}${videoClass} reveal">${media}<figcaption>${caption}</figcaption></figure>`;

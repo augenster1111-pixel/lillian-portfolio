@@ -31,10 +31,10 @@ function buildCard(item, mediaBase) {
   const title = escapeHtml(item.title || item.label || 'Other Work');
   const caption = escapeHtml(item.label || title);
   const badge = item.badge ? `<span class="video-badge">${escapeHtml(item.badge)}</span>` : '';
-  const poster = item.poster || item.image || '../media/project/04-other-project.webp';
+  const poster = item.poster || item.image || (type === 'video' ? item.src.replace(/\.mp4(?:[?#].*)?$/i, '.poster.webp') : '');
   const posterSrc = poster.includes('/') ? poster : `${mediaBase}${poster}`;
   const media = type === 'video'
-    ? `<video data-src="${escapeHtml(src)}" poster="${escapeHtml(posterSrc)}" muted loop playsinline preload="none"></video>${badge}`
+    ? `<video data-src="${escapeHtml(src)}"${poster ? ` poster="${escapeHtml(posterSrc)}"` : ''} muted loop playsinline preload="none"></video>${badge}`
     : `<img src="${escapeHtml(src)}" alt="${title}" loading="lazy" decoding="async">`;
 
   return `<figure class="masonry-item${sizeClass}${videoClass}" data-preview-type="${type}" data-preview-src="${escapeHtml(src)}" data-preview-title="${title}" tabindex="0">${media}<figcaption>${caption}</figcaption></figure>`;
@@ -172,8 +172,9 @@ function openPreview(card) {
   if (!src) return;
 
   document.querySelectorAll('.masonry-video video').forEach((video) => video.pause());
+  const posterSrc = src.replace(/\.mp4(?:[?#].*)?$/i, '.poster.webp');
   previewStage.innerHTML = type === 'video'
-    ? `<video class="media-preview-content" src="${escapeHtml(src)}" poster="../media/project/04-other-project.webp" controls playsinline preload="metadata"></video>`
+    ? `<video class="media-preview-content" src="${escapeHtml(src)}" poster="${escapeHtml(posterSrc)}" controls playsinline preload="metadata"></video>`
     : `<img class="media-preview-content" src="${escapeHtml(src)}" alt="${escapeHtml(title)}" decoding="async">`;
   previewModal.classList.add('is-open');
   previewModal.setAttribute('aria-hidden', 'false');
