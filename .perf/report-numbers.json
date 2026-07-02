@@ -1,0 +1,40 @@
+{
+  "oldFirstScreenMB": 0.532,
+  "finalMeasuredMB": 0.449,
+  "firstScreenReducedMB": 0.083,
+  "oldInitialJsKB": 46.4,
+  "finalInitialJsKB": 11,
+  "jsReducedKB": 35.5,
+  "oldImageEquivalentMB": 1.972,
+  "finalImageMB": 0.211,
+  "imageReducedMB": 1.761,
+  "oldHomeVideoMB": 29.67,
+  "finalInitialVideoMB": 0,
+  "videoReducedMB": 29.67,
+  "finalByType": [
+    {
+      "type": "document",
+      "bytes": 16492,
+      "count": 1,
+      "kb": 16.1
+    },
+    {
+      "type": "image",
+      "bytes": 221545,
+      "count": 7,
+      "kb": 216.4
+    },
+    {
+      "type": "stylesheet",
+      "bytes": 221172,
+      "count": 7,
+      "kb": 216
+    },
+    {
+      "type": "script",
+      "bytes": 11248,
+      "count": 3,
+      "kb": 11
+    }
+  ]
+}

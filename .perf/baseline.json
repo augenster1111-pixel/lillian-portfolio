@@ -1,0 +1,177 @@
+{
+  "timestamp": "2026-07-02T03:00:31.792Z",
+  "totalBytes": 1414280425,
+  "groups": [
+    {
+      "ext": ".pack",
+      "count": 1,
+      "size": 635119669
+    },
+    {
+      "ext": ".mp4",
+      "count": 36,
+      "size": 514510521
+    },
+    {
+      "ext": "",
+      "count": 184,
+      "size": 203914844
+    },
+    {
+      "ext": ".webp",
+      "count": 105,
+      "size": 58572130
+    },
+    {
+      "ext": ".pdf",
+      "count": 1,
+      "size": 1192733
+    },
+    {
+      "ext": ".css",
+      "count": 18,
+      "size": 460000
+    },
+    {
+      "ext": ".jpg",
+      "count": 1,
+      "size": 264470
+    },
+    {
+      "ext": ".js",
+      "count": 20,
+      "size": 165820
+    },
+    {
+      "ext": ".html",
+      "count": 11,
+      "size": 39652
+    },
+    {
+      "ext": ".sample",
+      "count": 14,
+      "size": 26788
+    },
+    {
+      "ext": ".idx",
+      "count": 1,
+      "size": 6224
+    },
+    {
+      "ext": ".md",
+      "count": 3,
+      "size": 4764
+    },
+    {
+      "ext": ".local",
+      "count": 1,
+      "size": 1328
+    },
+    {
+      "ext": ".rev",
+      "count": 1,
+      "size": 788
+    },
+    {
+      "ext": ".txt",
+      "count": 1,
+      "size": 520
+    },
+    {
+      "ext": ".json",
+      "count": 2,
+      "size": 174
+    }
+  ],
+  "firstScreenFiles": [
+    {
+      "file": "index.html",
+      "size": 14255
+    },
+    {
+      "file": "styles/base.css",
+      "size": 10696
+    },
+    {
+      "file": "styles/hero.css",
+      "size": 3951
+    },
+    {
+      "file": "styles/about.css",
+      "size": 3834
+    },
+    {
+      "file": "styles/work.css",
+      "size": 2295
+    },
+    {
+      "file": "styles/gallery.css",
+      "size": 6038
+    },
+    {
+      "file": "styles/layout.css",
+      "size": 16240
+    },
+    {
+      "file": "styles/interactions.css",
+      "size": 26802
+    },
+    {
+      "file": "styles/theme.css",
+      "size": 7028
+    },
+    {
+      "file": "styles/color-bends.css",
+      "size": 2860
+    },
+    {
+      "file": "styles/fixes.css",
+      "size": 152238
+    },
+    {
+      "file": "media/hero/lillian-hero.jpg",
+      "size": 264470
+    },
+    {
+      "file": "media/other-gallery-data.js",
+      "size": 4494
+    },
+    {
+      "file": "scripts/main.js",
+      "size": 2334
+    },
+    {
+      "file": "scripts/color-bends.js",
+      "size": 2439
+    },
+    {
+      "file": "scripts/work.js",
+      "size": 6783
+    },
+    {
+      "file": "scripts/interactions.js",
+      "size": 5838
+    },
+    {
+      "file": "scripts/contact-modal.js",
+      "size": 4177
+    },
+    {
+      "file": "scripts/star-trail.js",
+      "size": 6300
+    },
+    {
+      "file": "scripts/hero.js",
+      "size": 4236
+    },
+    {
+      "file": "scripts/router.js",
+      "size": 10165
+    }
+  ],
+  "firstScreenBytes": 557473,
+  "imagesBytes": 58836600,
+  "jsBytes": 120926,
+  "cssBytes": 460000,
+  "videoBytes": 514510521
+}

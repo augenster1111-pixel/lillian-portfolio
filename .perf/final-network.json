@@ -1,0 +1,267 @@
+{
+  "totalKB": 459.4,
+  "byType": [
+    {
+      "type": "document",
+      "bytes": 16492,
+      "count": 1,
+      "kb": 16.1
+    },
+    {
+      "type": "image",
+      "bytes": 221545,
+      "count": 7,
+      "kb": 216.4
+    },
+    {
+      "type": "stylesheet",
+      "bytes": 221172,
+      "count": 7,
+      "kb": 216
+    },
+    {
+      "type": "script",
+      "bytes": 11248,
+      "count": 3,
+      "kb": 11
+    }
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:4173/index.html?last=1782963223155",
+      "type": "document",
+      "status": 200,
+      "bytes": 16492,
+      "cache": "public, max-age=0, must-revalidate"
+    },
+    {
+      "url": "http://127.0.0.1:4173/media/hero/lillian-hero-768w.avif",
+      "type": "image",
+      "status": 200,
+      "bytes": 8313,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/styles/base.css",
+      "type": "stylesheet",
+      "status": 200,
+      "bytes": 10696,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/styles/hero.css",
+      "type": "stylesheet",
+      "status": 200,
+      "bytes": 3951,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/styles/layout.css",
+      "type": "stylesheet",
+      "status": 200,
+      "bytes": 16519,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/styles/theme.css",
+      "type": "stylesheet",
+      "status": 200,
+      "bytes": 7028,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/styles/about.css",
+      "type": "stylesheet",
+      "status": 200,
+      "bytes": 3834,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/styles/fixes.css?v=20260701-mobile-restore",
+      "type": "stylesheet",
+      "status": 200,
+      "bytes": 152342,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/scripts/home-loader.js",
+      "type": "script",
+      "status": 200,
+      "bytes": 2962,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/scripts/main.js",
+      "type": "script",
+      "status": 200,
+      "bytes": 2334,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/scripts/interactions.js",
+      "type": "script",
+      "status": 200,
+      "bytes": 5952,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/media/about%20me/lillian-about-768w.webp",
+      "type": "image",
+      "status": 200,
+      "bytes": 73026,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/media/about%20me/logo-kuaishou-480w.webp",
+      "type": "image",
+      "status": 200,
+      "bytes": 11540,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/media/about%20me/logo-leyee.webp",
+      "type": "image",
+      "status": 200,
+      "bytes": 10334,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/media/project/02-ai-advertising-video-768w.webp",
+      "type": "image",
+      "status": 200,
+      "bytes": 26094,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/media/project/01-game-buy-volume-768w.webp",
+      "type": "image",
+      "status": 200,
+      "bytes": 44280,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/media/project/03-game-marketing-visuals-768w.webp",
+      "type": "image",
+      "status": 200,
+      "bytes": 47958,
+      "cache": "public, max-age=31536000, immutable"
+    },
+    {
+      "url": "http://127.0.0.1:4173/styles/interactions.css",
+      "type": "stylesheet",
+      "status": 200,
+      "bytes": 26802,
+      "cache": "public, max-age=31536000, immutable"
+    }
+  ],
+  "state": {
+    "videosWithSrc": 0,
+    "heroImg": "http://127.0.0.1:4173/media/hero/lillian-hero-768w.avif",
+    "styles": [
+      "/styles/base.css",
+      "/styles/hero.css",
+      "/styles/layout.css",
+      "/styles/theme.css",
+      "/styles/about.css",
+      "/styles/fixes.css",
+      "/styles/interactions.css"
+    ],
+    "scripts": [
+      "/scripts/home-loader.js",
+      "/scripts/main.js",
+      "/scripts/interactions.js"
+    ],
+    "perfEntries": [
+      {
+        "name": "http://127.0.0.1:4173/media/hero/lillian-hero-768w.avif",
+        "transferSize": 8613,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:4173/styles/base.css",
+        "transferSize": 10996,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:4173/styles/hero.css",
+        "transferSize": 4251,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:4173/styles/layout.css",
+        "transferSize": 16819,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:4173/styles/about.css",
+        "transferSize": 4134,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:4173/styles/theme.css",
+        "transferSize": 7328,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:4173/styles/fixes.css?v=20260701-mobile-restore",
+        "transferSize": 152642,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:4173/scripts/home-loader.js",
+        "transferSize": 3262,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:4173/scripts/main.js",
+        "transferSize": 2634,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:4173/scripts/interactions.js",
+        "transferSize": 6252,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:4173/media/about%20me/lillian-about-768w.webp",
+        "transferSize": 73326,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:4173/media/about%20me/logo-leyee.webp",
+        "transferSize": 10634,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:4173/media/about%20me/logo-kuaishou-480w.webp",
+        "transferSize": 11840,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:4173/media/project/01-game-buy-volume-768w.webp",
+        "transferSize": 44580,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:4173/media/project/02-ai-advertising-video-768w.webp",
+        "transferSize": 26394,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:4173/media/project/03-game-marketing-visuals-768w.webp",
+        "transferSize": 48258,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:4173/styles/interactions.css",
+        "transferSize": 27102,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:4173/favicon.ico",
+        "transferSize": 309,
+        "initiatorType": "other"
+      }
+    ]
+  }
+}

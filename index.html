@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="李安欣 Lillian - 游戏视觉、AIGC 广告与买量设计作品集。">
   <title>Lillian - Visual Designer Portfolio</title>
+  <link rel="preconnect" href="https://vercel.live" crossorigin>
+  <link rel="dns-prefetch" href="//vercel.live">
+  <link rel="preconnect" href="https://vitals.vercel-insights.com" crossorigin>
+  <link rel="dns-prefetch" href="//vitals.vercel-insights.com">
+  <link rel="preload" as="image" href="media/hero/lillian-hero-480w.webp" type="image/webp" fetchpriority="high" imagesrcset="media/hero/lillian-hero-480w.webp 480w, media/hero/lillian-hero-768w.webp 768w, media/hero/lillian-hero.webp 977w" imagesizes="(max-width: 768px) 74vw, 360px">
   <link rel="stylesheet" href="styles/base.css">
   <link rel="stylesheet" href="styles/hero.css">
   <link rel="stylesheet" href="styles/about.css">
@@ -69,7 +74,7 @@
         <div class="hero-layer hero-card-layer">
           <div class="hero-visual reveal" aria-label="李安欣个人信息卡">
             <article class="hero-id-card">
-              <img src="media/hero/lillian-hero.jpg" alt="李安欣 Lillian 的个人照片" loading="lazy" decoding="async">
+              <img src="media/hero/lillian-hero.webp" srcset="media/hero/lillian-hero-480w.webp 480w, media/hero/lillian-hero-768w.webp 768w, media/hero/lillian-hero.webp 977w" sizes="(max-width: 768px) 74vw, 360px" alt="李安欣 Lillian 的个人照片" loading="eager" decoding="async" fetchpriority="high" width="977" height="1466">
               <div class="hero-id-content">
                 <span class="online"><i></i> AVAILABLE FOR WORK</span>
                 <h2>李安欣<small>Lillian</small></h2>
@@ -92,7 +97,7 @@
         <div class="about-gallery reveal" aria-label="个人经历横向卡片画廊">
           <article class="about-gallery-card about-main-card" data-about-detail-href="about/index.html">
             <div class="about-card-content">
-              <div class="about-card-media portrait-media"><img src="media/about%20me/lillian-about.webp" alt="李安欣 Lillian" loading="lazy" decoding="async"></div>
+              <div class="about-card-media portrait-media"><img src="media/about%20me/lillian-about.webp" srcset="media/about%20me/lillian-about-480w.webp 480w, media/about%20me/lillian-about-768w.webp 768w, media/about%20me/lillian-about-1200w.webp 1200w" sizes="(max-width: 768px) 78vw, 390px" alt="李安欣 Lillian" loading="lazy" decoding="async"></div>
               <div class="about-card-body">
                 <span class="about-card-kicker">01 / PROFILE</span>
                 <h3>李安欣 Lillian</h3>
@@ -115,7 +120,7 @@
 
           <article class="about-gallery-card company-card" data-about-detail-href="about/index.html">
             <div class="about-card-content">
-              <div class="about-card-media logo-media"><img src="media/about%20me/logo-kuaishou.webp" alt="快手标志" loading="lazy" decoding="async"></div>
+              <div class="about-card-media logo-media"><img src="media/about%20me/logo-kuaishou.webp" srcset="media/about%20me/logo-kuaishou-480w.webp 480w, media/about%20me/logo-kuaishou.webp 640w" sizes="(max-width: 768px) 40vw, 280px" alt="快手标志" loading="lazy" decoding="async"></div>
               <div class="about-card-body">
                 <span class="about-card-kicker">03 / EXPERIENCE</span>
                 <h3>快手 Kuaishou</h3>
@@ -146,28 +151,28 @@
           <div class="project-category" data-category="buy-volume">
             <button class="project-tab" type="button" role="tab" aria-selected="false" data-project="buy-volume"><span>01</span><span class="project-label"><strong>游戏买量视频</strong><small>BUY VOLUME OF VIDEOS</small></span><b>↗</b></button>
             <article class="project-preview" data-panel="buy-volume" data-url="work/01/index.html" tabindex="0">
-              <img src="media/project/01-game-buy-volume.webp" alt="Buy volume of videos 项目预览" loading="lazy" decoding="async">
+              <img src="media/project/01-game-buy-volume.webp" srcset="media/project/01-game-buy-volume-480w.webp 480w, media/project/01-game-buy-volume-768w.webp 768w, media/project/01-game-buy-volume-1200w.webp 1200w, media/project/01-game-buy-volume-1600w.webp 1600w" sizes="(max-width: 768px) 78vw, 980px" alt="Buy volume of videos 项目预览" loading="lazy" decoding="async">
               <div class="preview-overlay"><div><span>PERFORMANCE CREATIVE</span><p>兼顾吸睛节奏与投放目标的买量视频创意。</p></div><a class="ui-cta" href="work/01/index.html">VIEW DETAILS →</a></div>
             </article>
           </div>
           <div class="project-category" data-category="ai-ad">
             <button class="project-tab" type="button" role="tab" aria-selected="false" data-project="ai-ad"><span>02</span><span class="project-label"><strong>AI创意广告短片</strong><small>AI ADVERTISING VIDEO</small></span><b>↗</b></button>
             <article class="project-preview" data-panel="ai-ad" data-url="work/02/index.html" tabindex="0">
-              <img src="media/project/02-ai-advertising-video.webp" alt="AI Advertising Video 项目预览" loading="lazy" decoding="async">
+              <img src="media/project/02-ai-advertising-video.webp" srcset="media/project/02-ai-advertising-video-480w.webp 480w, media/project/02-ai-advertising-video-768w.webp 768w, media/project/02-ai-advertising-video-1200w.webp 1200w, media/project/02-ai-advertising-video-1600w.webp 1600w" sizes="(max-width: 768px) 78vw, 980px" alt="AI Advertising Video 项目预览" loading="lazy" decoding="async">
               <div class="preview-overlay"><div><span>AIGC VIDEO DESIGN</span><p>AI 辅助的广告创意与视频视觉生产。</p></div><a class="ui-cta" href="work/02/index.html">VIEW DETAILS →</a></div>
             </article>
           </div>
           <div class="project-category" data-category="game-marketing">
             <button class="project-tab" type="button" role="tab" aria-selected="false" data-project="game-marketing"><span>03</span><span class="project-label"><strong>游戏营销视觉设计</strong><small>GAME MARKETING VISUALS</small></span><b>↗</b></button>
             <article class="project-preview" data-panel="game-marketing" data-url="work/03/index.html" tabindex="0">
-              <img src="media/project/03-game-marketing-visuals.webp" alt="Game Marketing Visuals 项目预览" loading="lazy" decoding="async">
+              <img src="media/project/03-game-marketing-visuals.webp" srcset="media/project/03-game-marketing-visuals-480w.webp 480w, media/project/03-game-marketing-visuals-768w.webp 768w, media/project/03-game-marketing-visuals-1200w.webp 1200w, media/project/03-game-marketing-visuals-1600w.webp 1600w" sizes="(max-width: 768px) 78vw, 980px" alt="Game Marketing Visuals 项目预览" loading="lazy" decoding="async">
               <div class="preview-overlay"><div><span>GAME UA VISUAL</span><p>面向海外游戏市场的高表现视觉与广告素材设计。</p></div><a class="ui-cta" href="work/03/index.html">VIEW DETAILS →</a></div>
             </article>
           </div>
           <div class="project-category" data-category="other">
             <button class="project-tab" type="button" role="tab" aria-selected="false" data-project="other"><span>04</span><span class="project-label"><strong>以往设计项目</strong><small>OTHER PROJECT</small></span><b>↗</b></button>
             <article class="project-preview" data-panel="other" data-url="work/04/index.html" tabindex="0">
-              <img src="media/project/04-other-project.webp" alt="Other Project 项目预览" loading="lazy" decoding="async">
+              <img src="media/project/04-other-project.webp" srcset="media/project/04-other-project-480w.webp 480w, media/project/04-other-project-768w.webp 768w, media/project/04-other-project-1200w.webp 1200w, media/project/04-other-project-1600w.webp 1600w" sizes="(max-width: 768px) 78vw, 980px" alt="Other Project 项目预览" loading="lazy" decoding="async">
               <div class="preview-overlay"><div><span>VISUAL ARCHIVE</span><p>品牌视觉、三维探索与过往创意作品选集。</p></div><a class="ui-cta" href="work/04/index.html">VIEW DETAILS →</a></div>
             </article>
           </div>

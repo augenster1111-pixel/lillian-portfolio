@@ -138,6 +138,10 @@ function runInteractionStep(label, task) {
   }
 }
 
-runInteractionStep('other works heading', renderOtherWorksHeading);
-runInteractionStep('other works preview', renderOtherWorksPreview);
+if (typeof renderOtherWorksHeading === 'function') {
+  runInteractionStep('other works heading', renderOtherWorksHeading);
+}
+if (typeof renderOtherWorksPreview === 'function') {
+  runInteractionStep('other works preview', renderOtherWorksPreview);
+}
 runInteractionStep('variable proximity', initVariableProximity);

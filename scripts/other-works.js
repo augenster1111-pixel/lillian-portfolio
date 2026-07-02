@@ -189,12 +189,16 @@ function initLazyVideos(scope = document) {
   const videos = [...scope.querySelectorAll('video[data-src]')];
   if (!videos.length) return;
 
-  const loadVideo = (video) => {
-    if (video.dataset.loaded === 'true') return;
+  const loadVideo = (video, shouldPlay = false) => {
+    if (video.dataset.loaded === 'true') {
+      if (shouldPlay) video.play().catch(() => {});
+      return;
+    }
     video.dataset.loaded = 'true';
     video.src = video.dataset.src;
     video.preload = 'metadata';
     video.load();
+    if (shouldPlay) video.play().catch(() => {});
   };
 
   const onError = (video) => {
@@ -205,16 +209,32 @@ function initLazyVideos(scope = document) {
     }, { once: true });
   };
 
+  const bindActivation = (video) => {
+    if (video.dataset.clickLoadBound === 'true') return;
+    video.dataset.clickLoadBound = 'true';
+    video.setAttribute('tabindex', '0');
+    const activate = (event) => {
+      event?.preventDefault();
+      loadVideo(video, true);
+    };
+    video.addEventListener('click', activate);
+    video.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      activate(event);
+    });
+  };
+
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        loadVideo(entry.target);
+        entry.target.dataset.inView = 'true';
         observer.unobserve(entry.target);
       });
     }, { rootMargin: '240px 0px' });
     videos.forEach((video) => {
       onError(video);
+      bindActivation(video);
       observer.observe(video);
     });
     return;
@@ -222,7 +242,7 @@ function initLazyVideos(scope = document) {
 
   videos.forEach((video) => {
     onError(video);
-    window.setTimeout(() => loadVideo(video), 1200);
+    bindActivation(video);
   });
 }
 
@@ -230,7 +250,9 @@ function bindVideoHover() {
   document.querySelectorAll('.masonry-video video').forEach((video) => {
     if (window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)').matches) return;
     const card = video.closest('.masonry-video');
-    card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+    card.addEventListener('mouseenter', () => {
+      if (video.dataset.loaded === 'true') video.play().catch(() => {});
+    });
     card.addEventListener('mouseleave', () => video.pause());
   });
 }

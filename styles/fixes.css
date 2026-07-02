@@ -1270,6 +1270,10 @@ body.theme-light .hero-id-card > img {
   opacity: 1 !important;
 }
 
+body.theme-light .hero-id-card > picture > img {
+  opacity: 1 !important;
+}
+
 /* Hero title mark: use the real inline registered symbol, not the fallback glyph. */
 .hero .hero-title::after {
   content: none !important;
@@ -2652,7 +2656,8 @@ body.theme-light[data-work04-detail-id] main > section:nth-child(n+2):hover::aft
     bottom: 164px !important;
   }
 
-  .hero-id-card > img {
+  .hero-id-card > img,
+  .hero-id-card > picture {
     flex-basis: 94px !important;
     width: 94px !important;
   }

@@ -22,8 +22,9 @@
 
   const avatar = document.querySelector('[data-about-avatar]');
   if (avatar && data.profile.avatar) {
-    avatar.loading = 'lazy';
+    avatar.loading = 'eager';
     avatar.decoding = 'async';
+    avatar.fetchPriority = 'high';
     avatar.src = encodeURI(data.profile.avatar);
   }
 

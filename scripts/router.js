@@ -261,7 +261,9 @@ if (aboutGallery && aboutCards.length) {
 
 galleryVideos.forEach((video) => {
   const card = video.closest('.masonry-video');
-  card.addEventListener('mouseenter', () => video.play().catch(() => {}));
+  card.addEventListener('mouseenter', () => {
+    if (video.dataset.loaded === 'true') video.play().catch(() => {});
+  });
   card.addEventListener('mouseleave', () => video.pause());
 });
 

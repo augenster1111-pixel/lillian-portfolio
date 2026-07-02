@@ -1,0 +1,57 @@
+{
+  "totalKB": 778.1,
+  "byType": [
+    {
+      "type": "document",
+      "bytes": 16364,
+      "count": 1,
+      "kb": 16
+    },
+    {
+      "type": "image",
+      "bytes": 500534,
+      "count": 11,
+      "kb": 488.8
+    },
+    {
+      "type": "stylesheet",
+      "bytes": 232365,
+      "count": 10,
+      "kb": 226.9
+    },
+    {
+      "type": "script",
+      "bytes": 47554,
+      "count": 9,
+      "kb": 46.4
+    }
+  ],
+  "mp4Requests": 0,
+  "state": {
+    "videosWithSrc": 0,
+    "scripts": [
+      "/media/other-gallery-data.js",
+      "/scripts/main.js",
+      "/scripts/color-bends.js",
+      "/scripts/work.js",
+      "/scripts/interactions.js",
+      "/scripts/contact-modal.js",
+      "/scripts/star-trail.js",
+      "/scripts/hero.js",
+      "/scripts/router.js"
+    ],
+    "styles": [
+      "/styles/base.css",
+      "/styles/hero.css",
+      "/styles/about.css",
+      "/styles/work.css",
+      "/styles/gallery.css",
+      "/styles/layout.css",
+      "/styles/interactions.css",
+      "/styles/theme.css",
+      "/styles/color-bends.css",
+      "/styles/fixes.css"
+    ],
+    "heroImg": "http://127.0.0.1:4173/media/hero/lillian-hero-768w.webp"
+  }
+}

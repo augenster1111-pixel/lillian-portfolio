@@ -34,13 +34,17 @@ function initLazyVideos(scope = document) {
   const videos = [...scope.querySelectorAll('video[data-src]')];
   if (!videos.length) return;
 
-  const loadVideo = (video) => {
-    if (video.dataset.loaded === 'true') return;
+  const loadVideo = (video, shouldPlay = false) => {
+    if (video.dataset.loaded === 'true') {
+      if (shouldPlay) video.play().catch(() => {});
+      return;
+    }
     if (!video.dataset.src) return;
     video.dataset.loaded = 'true';
     video.src = video.dataset.src;
     video.preload = 'metadata';
     video.load();
+    if (shouldPlay) video.play().catch(() => {});
   };
 
   const bindError = (video) => {
@@ -51,17 +55,33 @@ function initLazyVideos(scope = document) {
     }, { once: true });
   };
 
+  const bindActivation = (video) => {
+    if (video.dataset.clickLoadBound === 'true') return;
+    video.dataset.clickLoadBound = 'true';
+    video.setAttribute('tabindex', '0');
+    const activate = (event) => {
+      event?.preventDefault();
+      loadVideo(video, true);
+    };
+    video.addEventListener('click', activate);
+    video.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      activate(event);
+    });
+  };
+
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
-        loadVideo(entry.target);
+        entry.target.dataset.inView = 'true';
         observer.unobserve(entry.target);
       });
     }, { rootMargin: '260px 0px' });
 
     videos.forEach((video) => {
       bindError(video);
+      bindActivation(video);
       observer.observe(video);
     });
     return;
@@ -69,7 +89,7 @@ function initLazyVideos(scope = document) {
 
   videos.forEach((video) => {
     bindError(video);
-    window.setTimeout(() => loadVideo(video), 1200);
+    bindActivation(video);
   });
 }
 
@@ -157,7 +177,7 @@ function closeProjectMediaPreview() {
 
 function openProjectMediaPreview(media) {
   if (!shouldUseProjectMediaPreview()) return;
-  const src = media.currentSrc || media.src;
+  const src = media.currentSrc || media.src || media.dataset.src;
   if (!src) return;
 
   const modal = ensureProjectMediaPreview();
@@ -345,8 +365,9 @@ if (!project) {
   if (cover) {
     cover.src = project.cover;
     cover.alt = project.titleLines.join(' ');
-    cover.loading = 'lazy';
+    cover.loading = 'eager';
     cover.decoding = 'async';
+    cover.fetchPriority = 'high';
   }
 
   const sectionNav = document.querySelector('[data-section-nav]');
